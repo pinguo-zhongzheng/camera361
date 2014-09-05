@@ -1,22 +1,25 @@
 package pg.com.camera361;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.ColorMatrixColorFilter;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
@@ -41,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
 
             try {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
-                fos.write(data);
+//                fos.write(data);
                 fos.close();
             } catch (FileNotFoundException e) {
                 Log.d("Camera361", "File not found: " + e.getMessage());
@@ -53,14 +56,34 @@ public class MainActivity extends ActionBarActivity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+    Camera.ShutterCallback myShutterCallback = new Camera.ShutterCallback() {
+
+        public void onShutter() {
+            // TODO Auto-generated method stub
+            Log.i("camera361", "myShutterCallback:onShutter...");
+
+        }
+    };
     private Camera mCamera;
     private CameraPreview mPreview;
     private int numberOfCameras;
     private int cameraCurrentlyLocked;
-
     // The first rear facing camera
     private int defaultCameraId;
     private Uri fileUri;
+    private boolean isAutoFousSet = false;
+    private Bitmap mBitmap;
+    private Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            // TODO Auto-generated method stub
+            if (success) {
+                Log.i("camera361", "myAutoFocusCallback: success...");
+                //myCamera.setOneShotPreviewCallback(null);
+            } else {
+                Log.i("camera361", "myAutoFocusCallback: fail...");
+            }
+        }
+    };
 
     /**
      * A safe way to get an instance of the Camera object.
@@ -121,6 +144,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        Window myWindow = this.getWindow();
+        myWindow.setFlags(flag, flag);
+
         setContentView(R.layout.camera_preview);
 
         // Create our Preview view and set it as the content of our activity.
@@ -134,10 +163,14 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         // get an image from the camera
-                        mCamera.takePicture(null, null, mPicture);
+                        mCamera.autoFocus(mAutoFocusCallback);
+                        if (mCamera != null) {
+                            mCamera.takePicture(null, null, mPicture);
+                        }
                     }
                 }
         );
+
         // Find the total number of cameras available
         numberOfCameras = Camera.getNumberOfCameras();
 
@@ -150,38 +183,26 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+    }
 
-//        create Intent to take a picture and return control to the calling application
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-
-        // start the image capture Intent
-//        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
-        //create new Intent
-//        Intent intent2 = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//
-//        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);  // create a file to save the video
-//        intent2.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);  // set the image file name
-//
-//        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); // set the video image quality to high
-//
-        // start the Video Capture Intent
-//        startActivityForResult(intent2, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-
+    private void startCameraAndAutoFocus(){
+        if (!isAutoFousSet) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            mCamera.setParameters(parameters);
+            isAutoFousSet = true;
+        }
+        mPreview.switchCamera(mCamera);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         // Open the default i.e. the first rear facing camera.
         // Create an instance of Camera
         mCamera = getCameraInstance();
         cameraCurrentlyLocked = defaultCameraId;
-        mPreview.setCamera(mCamera);
+        startCameraAndAutoFocus();
     }
 
     @Override
@@ -191,9 +212,10 @@ public class MainActivity extends ActionBarActivity {
         // Because the Camera object is a shared resource, it's very
         // important to release it when the activity is paused.
         if (mCamera != null) {
-            mPreview.setCamera(null);
+            mPreview.switchCamera(null);
             mCamera.release();
             mCamera = null;
+            isAutoFousSet = false;
         }
     }
 
@@ -225,7 +247,7 @@ public class MainActivity extends ActionBarActivity {
                 // Release this camera -> cameraCurrentlyLocked
                 if (mCamera != null) {
                     mCamera.stopPreview();
-                    mPreview.setCamera(null);
+                    mPreview.switchCamera(null);
                     mCamera.release();
                     mCamera = null;
                 }
@@ -236,40 +258,11 @@ public class MainActivity extends ActionBarActivity {
                         .open((cameraCurrentlyLocked + 1) % numberOfCameras);
                 cameraCurrentlyLocked = (cameraCurrentlyLocked + 1)
                         % numberOfCameras;
-                mPreview.switchCamera(mCamera);
-
-                // Start the preview
-                mCamera.startPreview();
+//                isAutoFousSet = false;
+                startCameraAndAutoFocus();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Image saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the image capture
-            } else {
-                // Image capture failed, advise user
-            }
-        }
-
-        if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // Video captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // User cancelled the video capture
-            } else {
-                // Video capture failed, advise user
-            }
         }
     }
 
@@ -284,5 +277,40 @@ public class MainActivity extends ActionBarActivity {
             // no camera on this device
             return false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        super.onBackPressed();
+    }
+
+    public class MyOnTouchListener implements View.OnTouchListener {
+
+        public final float[] BT_SELECTED = new float[]
+                {2, 0, 0, 0, 2,
+                        0, 2, 0, 0, 2,
+                        0, 0, 2, 0, 2,
+                        0, 0, 0, 1, 0};
+
+        public final float[] BT_NOT_SELECTED = new float[]
+                {1, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0,
+                        0, 0, 1, 0, 0,
+                        0, 0, 0, 1, 0};
+
+        public boolean onTouch(View v, MotionEvent event) {
+            // TODO Auto-generated method stub
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                v.getBackground().setColorFilter(new ColorMatrixColorFilter(BT_SELECTED));
+                v.setBackgroundDrawable(v.getBackground());
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.getBackground().setColorFilter(new ColorMatrixColorFilter(BT_NOT_SELECTED));
+                v.setBackgroundDrawable(v.getBackground());
+
+            }
+            return false;
+        }
+
     }
 }
