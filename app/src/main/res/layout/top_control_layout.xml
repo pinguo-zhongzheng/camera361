@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <ImageButton
+<ImageButton
         android:id="@+id/camera_switching"
         android:layout_width="46dp"
         android:layout_height="46dp"

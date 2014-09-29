@@ -225,6 +225,10 @@ public class CameraController {
         mPreviewSize = getOptimalSize(w, h, mSupportedPreviewSizes);
     }
 
+    public List<Camera.Size> getSupportedPreviewSizes() {
+        return mSupportedPreviewSizes;
+    }
+
     public void setSupportCameraSize(int w, int h) {
         updateSupportSize(w, h);
         Camera.Parameters parameters = mCamera.getParameters();

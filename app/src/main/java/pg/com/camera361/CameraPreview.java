@@ -97,6 +97,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         setMeasuredDimension(width, height);
         Log.d(CameraConstants.TAG, "cameraPreview onMeasure");
+
+        if (mCameraController.getSupportedPreviewSizes() != null) {
+            mCameraController.stopCamera();
+            mCameraController.setSupportCameraSize(width, height);
+            mCameraController.startCamera();
+        }
     }
 
 //    @Override

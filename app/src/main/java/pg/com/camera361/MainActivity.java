@@ -25,9 +25,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        Window myWindow = this.getWindow();
-        myWindow.setFlags(flag, flag);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_layout);
     }
 
