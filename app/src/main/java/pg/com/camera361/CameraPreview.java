@@ -15,7 +15,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private CameraController mCameraController;
 
-    public CameraPreview(Context context, CameraController camera) {
+    public CameraPreview(Context context) {
         super(context);
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -23,7 +23,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mCameraController = camera;
+        mCameraController = CameraController.getInstance();
     }
 
     public void setDisplayOrientation(Activity activity) {
@@ -52,7 +52,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // The Surface has been created, acquire the camera and tell it where
         // to draw.
         Log.d(CameraConstants.TAG, "cameraPreview surfaceCreated");
-        mCameraController.initCamera();
+        mCameraController.initCamera(getContext());
         mCameraController.initSupportedPreviewSizes();
         mCameraController.bindSurface(mHolder);
         mCameraController.startCamera();

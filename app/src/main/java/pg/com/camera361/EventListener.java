@@ -1,5 +1,7 @@
 package pg.com.camera361;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,12 +11,17 @@ import android.view.View;
  */
 class EventListener implements View.OnClickListener, View.OnTouchListener {
     private static EventListener mEventListener = new EventListener();
+    private Activity mActivity;
 
     private EventListener() {
     }
 
     public static EventListener getInstance() {
         return mEventListener;
+    }
+
+    public void init(Activity activity){
+        mActivity = activity;
     }
 
     public void setTouchAndClickListener(View view) {
@@ -31,23 +38,27 @@ class EventListener implements View.OnClickListener, View.OnTouchListener {
                     Log.d(CameraConstants.TAG, "camera_switching onTouch down");
                 }
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-
+                    CameraController.getInstance().changeCamera();
                 }
-                break;
+                return false;
             case R.id.resolution:
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     Log.d(CameraConstants.TAG, "resolution onTouch down");
+                    Intent intent = new Intent( "topControl.eventManager" );
+                    intent.putExtra("resolution", "down");
+                    mActivity.sendBroadcast(intent);
                 }
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                 }
-                break;
+                return false;
             case R.id.start:
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     Log.d(CameraConstants.TAG, "start onTouch down");
                 }
                 if (event.getAction() == MotionEvent.ACTION_UP) {
+                    CameraController.getInstance().takePicture();
                 }
-                break;
+                return false;
         }
         return false;
     }

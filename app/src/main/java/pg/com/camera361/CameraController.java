@@ -1,5 +1,6 @@
 package pg.com.camera361;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
 import java.io.File;
@@ -34,6 +36,9 @@ public class CameraController {
 
     private Camera.Size mPreviewSize;
     private List<Camera.Size> mSupportedPreviewSizes;
+    private SurfaceHolder mHolder;
+
+    private static CameraController mController = new CameraController();
 
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
@@ -41,19 +46,22 @@ public class CameraController {
 
             File pictureFile = getOutputMediaFile(CameraConstants.MEDIA_TYPE_IMAGE);
             if (pictureFile == null) {
-                Log.d("Camera361", "Error creating media file, check storage permissions!");
+                Log.d(CameraConstants.TAG, "Error creating media file, check storage permissions!");
                 return;
             }
 
-            try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
+//            try {
+//                FileOutputStream fos = new FileOutputStream(pictureFile);
 //                fos.write(data);
-                fos.close();
-            } catch (FileNotFoundException e) {
-                Log.d("Camera361", "File not found: " + e.getMessage());
-            } catch (IOException e) {
-                Log.d("Camera361", "Error accessing file: " + e.getMessage());
-            }
+//                fos.close();
+//                Log.d(CameraConstants.TAG, "picture taken success!! ");
+//            } catch (FileNotFoundException e) {
+//                Log.d(CameraConstants.TAG, "File not found: " + e.getMessage());
+//            } catch (IOException e) {
+//                Log.d(CameraConstants.TAG, "Error accessing file: " + e.getMessage());
+//            }
+            Log.d(CameraConstants.TAG, "picture taken success!! ");
+            startCamera();
         }
     };
 
@@ -61,16 +69,18 @@ public class CameraController {
         public void onAutoFocus(boolean success, Camera camera) {
             // TODO Auto-generated method stub
             if (success) {
-                Log.i("camera361", "myAutoFocusCallback: success...");
+                Log.i(CameraConstants.TAG, "myAutoFocusCallback: success...");
                 //myCamera.setOneShotPreviewCallback(null);
             } else {
-                Log.i("camera361", "myAutoFocusCallback: fail...");
+                Log.i(CameraConstants.TAG, "myAutoFocusCallback: fail...");
             }
         }
     };
 
-    public CameraController() {
+    private CameraController(){}
 
+    public static CameraController getInstance(){
+        return mController;
     }
 
     /**
@@ -129,9 +139,24 @@ public class CameraController {
         return c; // returns null if camera is unavailable
     }
 
+    private Camera getCameraInstance(int cameraInt) {
+        Camera c = null;
+        try {
+            c = Camera.open(cameraInt); // attempt to get a Camera instance
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage("The target Camera has already in use!")
+//                .setNeutralButton("Close", null);
+//        AlertDialog alert = builder.create();
+//        alert.show();
+        }
+        return c; // returns null if camera is unavailable
+    }
+
     private void initDefaultCameraIndex() {
         // Find the total number of cameras available
-
+        numberOfCameras = Camera.getNumberOfCameras();
         // Find the ID of the default camera
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int i = 0; i < numberOfCameras; i++) {
@@ -167,11 +192,42 @@ public class CameraController {
         }
     }
 
-    public void initCamera() {
+    public void initCamera(Context context) {
+        initDefaultCameraIndex();
         if (mCamera == null) {
             mCamera = getCameraInstance();
         }
+        mCamera.setDisplayOrientation(CameraConstants.preview_orientation);
+        cameraCurrentlyLocked = defaultCameraId;
+//        OrientationEventListener listener = new OrientationEventListener(context) {
+//            @Override
+//            public void onOrientationChanged(int orientation) {
+//                if (orientation == ORIENTATION_UNKNOWN) return;
+//                android.hardware.Camera.CameraInfo info =
+//                        new android.hardware.Camera.CameraInfo();
+//                android.hardware.Camera.getCameraInfo(cameraCurrentlyLocked, info);
+//                orientation = (orientation + 45) / 90 * 90;
+//                int rotation = 0;
+//                if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//                    rotation = (info.orientation - orientation + 360) % 360;
+//                } else {  // back-facing camera
+//                    rotation = (info.orientation + orientation) % 360;
+//                }
+//                Camera.Parameters parameters = mCamera.getParameters();
+//                parameters.setRotation(rotation);
+//                mCamera.setParameters(parameters);
+//            }
+//        };
+//        listener.enable();
+//        Camera.Parameters parameters = mCamera.getParameters();
+//        mCamera.setParameters(parameters);
+    }
+
+    private void initNextCamera(){
         initDefaultCameraIndex();
+        if (mCamera == null) {
+            mCamera = getCameraInstance();
+        }
     }
 
     public void bindSurface(SurfaceHolder holder) {
@@ -182,6 +238,7 @@ public class CameraController {
                 e.printStackTrace();
             }
         }
+        mHolder = holder;
     }
 
     public void initSupportedPreviewSizes() {
@@ -322,5 +379,38 @@ public class CameraController {
             // no camera on this device
             return false;
         }
+    }
+
+    public void changeCamera(){
+        if (numberOfCameras == 1) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setMessage(this.getString(R.string.camera_alert))
+//                    .setNeutralButton("Close", null);
+//            AlertDialog alert = builder.create();
+//            alert.show();
+            return ;
+        }
+
+        // OK, we have multiple cameras.
+        // Release this camera -> cameraCurrentlyLocked
+        if (mCamera != null) {
+            stopCamera();
+            releaseCamera();
+        }
+
+        // Acquire the next camera and request Preview to reconfigure
+        // parameters.
+        mCamera = getCameraInstance((cameraCurrentlyLocked + 1) % numberOfCameras);
+        cameraCurrentlyLocked = (cameraCurrentlyLocked + 1)
+                % numberOfCameras;
+        initSupportedPreviewSizes();
+        mCamera.setDisplayOrientation(CameraConstants.preview_orientation);
+        bindSurface(mHolder);
+        startCamera();
+        return;
+    }
+
+    public void takePicture(){
+        mCamera.takePicture(null,null,mPicture);
     }
 }

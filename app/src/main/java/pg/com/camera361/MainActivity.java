@@ -1,5 +1,6 @@
 package pg.com.camera361;
 
+import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -40,11 +41,6 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         Log.d(CameraConstants.TAG, "mainActivity onResume");
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage(CameraConstants.camera_alert)
-//                .setNeutralButton("Close", null);
-//        AlertDialog alert = builder.create();
-//        alert.show();
         // Open the default i.e. the first rear facing camera.
     }
 

@@ -3,27 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <fragment
         android:id="@+id/top_control"
         class="pg.com.camera361.TopControl"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         tools:layout="@layout/top_control_layout" />
 
     <fragment
         android:id="@+id/middle_preview"
         class="pg.com.camera361.MiddlePreview"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         tools:layout="@layout/middle_preview_layout" />
 
     <fragment
         android:id="@+id/bottom_control"
         class="pg.com.camera361.BottomControl"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         tools:layout="@layout/bottom_control_layout" />
 </LinearLayout>

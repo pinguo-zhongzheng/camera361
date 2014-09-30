@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
@@ -47,9 +48,9 @@ public class MiddlePreview extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mPreview = new CameraPreview(getActivity().getBaseContext(), new CameraController());
-        LinearLayout preview = (LinearLayout) getView().findViewById(R.id.camera_preview);
-        preview.addView(mPreview, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        mPreview = new CameraPreview(getActivity().getBaseContext());
+        FrameLayout preview = (FrameLayout) getView().findViewById(R.id.camera_preview);
+        preview.addView(mPreview);
     }
 
     @Override
