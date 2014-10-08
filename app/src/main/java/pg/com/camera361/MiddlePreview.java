@@ -6,16 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 /**
  * Created by zhongzheng on 14-9-29.
  */
 public class MiddlePreview extends Fragment {
-    boolean mDualPane;
-    int mCurCheckPosition = 0;
-    private CameraPreview mPreview;
+    private boolean mDualPane;
+    private int mCurCheckPosition = 0;
+    private MiddleViewManager mViewManager;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -48,9 +46,12 @@ public class MiddlePreview extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mPreview = new CameraPreview(getActivity().getBaseContext());
-        FrameLayout preview = (FrameLayout) getView().findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
+        mViewManager = new MiddleViewManager(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override

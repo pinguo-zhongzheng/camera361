@@ -1,8 +1,6 @@
 package pg.com.camera361;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -20,7 +18,7 @@ class EventListener implements View.OnClickListener, View.OnTouchListener {
         return mEventListener;
     }
 
-    public void init(Activity activity){
+    public void init(Activity activity) {
         mActivity = activity;
     }
 
@@ -33,32 +31,6 @@ class EventListener implements View.OnClickListener, View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         // TODO Auto-generated method stub
         switch (v.getId()) {
-            case R.id.camera_switching:
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d(CameraConstants.TAG, "camera_switching onTouch down");
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    CameraController.getInstance().changeCamera();
-                }
-                return false;
-            case R.id.resolution:
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d(CameraConstants.TAG, "resolution onTouch down");
-                    Intent intent = new Intent( "topControl.eventManager" );
-                    intent.putExtra("resolution", "down");
-                    mActivity.sendBroadcast(intent);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                }
-                return false;
-            case R.id.start:
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d(CameraConstants.TAG, "start onTouch down");
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    CameraController.getInstance().takePicture();
-                }
-                return false;
         }
         return false;
     }
@@ -72,6 +44,8 @@ class EventListener implements View.OnClickListener, View.OnTouchListener {
             case R.id.resolution:
                 break;
             case R.id.start:
+                break;
+            case R.id.camera_preview:
                 break;
         }
     }

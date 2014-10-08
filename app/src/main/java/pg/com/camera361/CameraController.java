@@ -1,6 +1,5 @@
 package pg.com.camera361;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,12 +7,9 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.view.OrientationEventListener;
 import android.view.SurfaceHolder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,22 +20,19 @@ import java.util.List;
  * Created by zhongzheng on 14-9-25.
  */
 public class CameraController {
+    private static CameraController mController = new CameraController();
     private Camera mCamera;
     private int numberOfCameras;
-
     private int cameraCurrentlyLocked;
     // The first rear facing camera
     private int defaultCameraId;
     private Uri fileUri;
     private boolean isAutoFousSet = false;
     private Bitmap mBitmap;
-
     private Camera.Size mPreviewSize;
     private List<Camera.Size> mSupportedPreviewSizes;
     private SurfaceHolder mHolder;
-
-    private static CameraController mController = new CameraController();
-
+    private int mMaxZoom = -1;
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -219,8 +212,15 @@ public class CameraController {
 //            }
 //        };
 //        listener.enable();
-//        Camera.Parameters parameters = mCamera.getParameters();
-//        mCamera.setParameters(parameters);
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (parameters.getSupportedFocusModes().contains("auto")) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
+        if (parameters.isZoomSupported()) {
+            mMaxZoom = parameters.getMaxZoom();
+            parameters.setZoom(0);
+        }
+        mCamera.setParameters(parameters);
     }
 
     private void initNextCamera(){
@@ -411,6 +411,19 @@ public class CameraController {
     }
 
     public void takePicture(){
+        mCamera.autoFocus(mAutoFocusCallback);
         mCamera.takePicture(null,null,mPicture);
+    }
+
+    public void setZoom(int index) {
+        if (index <= mMaxZoom) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setZoom(index);
+            mCamera.setParameters(parameters);
+        }
+    }
+
+    public int getMaxZoom() {
+        return mMaxZoom;
     }
 }

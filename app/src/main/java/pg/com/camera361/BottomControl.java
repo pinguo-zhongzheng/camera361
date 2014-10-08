@@ -5,20 +5,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 /**
  * Created by zhongzheng on 14-9-29.
  */
 public class BottomControl extends Fragment {
-    boolean mDualPane;
-    int mCurCheckPosition = 0;
+    private boolean mDualPane;
+    private int mCurCheckPosition = 0;
 
-    //    View.OnClickListener mStart = new View.OnClickListener() {
-//        public void onClick(View v) {
-//
-//        }
-//    };
+    private BottomViewManager mViewManager;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -50,7 +46,6 @@ public class BottomControl extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ImageButton start = (ImageButton) getView().findViewById(R.id.start);
-        EventListener.getInstance().setTouchAndClickListener(start);
+        mViewManager = new BottomViewManager(this);
     }
 }

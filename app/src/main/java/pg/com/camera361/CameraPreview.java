@@ -140,4 +140,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Log.d(CameraConstants.TAG, "cameraPreview surfaceDestroy");
         mCameraController.releaseCamera();
     }
+
+//    @Override
+//    public void onDraw(Canvas canvas) {
+//        super.draw(canvas);
+//        Log.d(CameraConstants.TAG, "haha start seekbar!!");
+//        canvas.drawColor(Color.BLACK);//设置画布背景颜色
+//        Paint p = new Paint(); //创建画笔
+//        p.setColor(Color.WHITE);
+//        Rect r = new Rect(100, 50, 300, 250);
+//        canvas.drawRect(r, p);
+//        canvas.drawText("aa"+100+"aa", 100, 310, p);
+//    }
 }
