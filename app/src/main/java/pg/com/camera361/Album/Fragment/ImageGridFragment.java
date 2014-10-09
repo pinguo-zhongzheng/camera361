@@ -45,8 +45,6 @@ public class ImageGridFragment extends AbsListViewBaseFragment {
 
     String[] imageUrls = AlbumConstants.IMAGES;
 
-    DisplayImageOptions options;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

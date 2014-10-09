@@ -23,6 +23,8 @@ public class BottomViewManager {
         mFragment = fragment;
         if (mFragment.getTag().contains(CameraConstants.Camera_Type)) {
             registerCameraEventListenler();
+        } else if (mFragment.getTag().contains(CameraConstants.Album_Type)) {
+
         }
     }
 

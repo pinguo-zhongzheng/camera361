@@ -48,9 +48,9 @@ public class ImageListFragment extends AbsListViewBaseFragment {
 
     public static final int INDEX = 0;
 
-    String[] imageUrls = AlbumConstants.IMAGES;
+    private String[] imageUrls = AlbumConstants.IMAGES;
 
-    DisplayImageOptions options;
+    private DisplayImageOptions options;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,98 +92,6 @@ public class ImageListFragment extends AbsListViewBaseFragment {
         ImageView image;
     }
 
-    class ImageAdapter extends BaseAdapter {
-
-        private LayoutInflater inflater;
-        private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-
-        ImageAdapter() {
-            inflater = LayoutInflater.from(getActivity());
-        }
-
-        @Override
-        public int getCount() {
-            return imageUrls.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            final ViewHolder holder;
-            if (convertView == null) {
-                view = inflater.inflate(R.layout.item_list_image, parent, false);
-                holder = new ViewHolder();
-                holder.text = (TextView) view.findViewById(R.id.text);
-                holder.image = (ImageView) view.findViewById(R.id.image);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder) view.getTag();
-            }
-
-            holder.text.setText("Item " + (position + 1));
-
-            ImageLoader.getInstance().displayImage(imageUrls[position], holder.image, options, animateFirstListener);
-
-            return view;
-        }
-    }
-
-    class ImageAdapter extends BaseAdapter {
-
-        private LayoutInflater inflater;
-        private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-
-        ImageAdapter() {
-            inflater = LayoutInflater.from(getActivity());
-        }
-
-        @Override
-        public int getCount() {
-            return imageUrls.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = convertView;
-            final ViewHolder holder;
-            if (convertView == null) {
-                view = inflater.inflate(R.layout.item_list_image, parent, false);
-                holder = new ViewHolder();
-                holder.text = (TextView) view.findViewById(R.id.text);
-                holder.image = (ImageView) view.findViewById(R.id.image);
-                view.setTag(holder);
-            } else {
-                holder = (ViewHolder) view.getTag();
-            }
-
-            holder.text.setText("Item " + (position + 1));
-
-            ImageLoader.getInstance().displayImage(imageUrls[position], holder.image, options, animateFirstListener);
-
-            return view;
-        }
-    }
-
     private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
 
         static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
@@ -198,6 +106,52 @@ public class ImageListFragment extends AbsListViewBaseFragment {
                     displayedImages.add(imageUri);
                 }
             }
+        }
+    }
+
+    class ImageAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+        private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+
+        ImageAdapter() {
+            inflater = LayoutInflater.from(getActivity());
+        }
+
+        @Override
+        public int getCount() {
+            return imageUrls.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = convertView;
+            final ViewHolder holder;
+            if (convertView == null) {
+                view = inflater.inflate(R.layout.item_list_image, parent, false);
+                holder = new ViewHolder();
+                holder.text = (TextView) view.findViewById(R.id.text);
+                holder.image = (ImageView) view.findViewById(R.id.image);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
+
+            holder.text.setText("Item " + (position + 1));
+
+            ImageLoader.getInstance().displayImage(imageUrls[position], holder.image, options, animateFirstListener);
+
+            return view;
         }
     }
 }

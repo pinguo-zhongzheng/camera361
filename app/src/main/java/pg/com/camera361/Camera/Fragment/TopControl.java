@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import pg.com.camera361.Camera.CameraConstants;
 import pg.com.camera361.R;
 
 public class TopControl extends Fragment {
@@ -33,7 +34,11 @@ public class TopControl extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("LeftFragment onCreateView");
         // 第一个参数是这个Fragment将要显示的界面布局,第二个参数是这个Fragment所属的Activity,第三个参数是决定此fragment是否附属于Activity
-        return inflater.inflate(R.layout.top_control_layout, container, true);
+        if (getTag().contains(CameraConstants.Album_Type)) {
+            return inflater.inflate(R.layout.album_top_layout, container, true);
+        } else {
+            return inflater.inflate(R.layout.top_control_layout, container, true);
+        }
     }
 
     @Override

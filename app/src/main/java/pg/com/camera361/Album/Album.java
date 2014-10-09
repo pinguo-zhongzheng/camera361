@@ -27,7 +27,6 @@ public class Album extends FragmentActivity {
     protected void onStart() {
         super.onResume();
         Log.d(CameraConstants.TAG, "Album onStart");
-
     }
 
     @Override

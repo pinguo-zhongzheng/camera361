@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -10,8 +9,7 @@
         class="pg.com.camera361.Camera.Fragment.TopControl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:tag="camera_type_top"
-        tools:layout="@layout/top_control_layout" />
+        android:tag="camera_type_top" />
 
     <fragment
         android:id="@+id/middle_preview"
@@ -19,14 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:tag="camera_type_middle"
-        tools:layout="@layout/middle_preview_layout" />
+        android:tag="camera_type_middle" />
 
     <fragment
         android:id="@+id/bottom_control"
         class="pg.com.camera361.Camera.Fragment.BottomControl"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:tag="camera_type_bottom"
-        tools:layout="@layout/bottom_control_layout" />
+        android:tag="camera_type_bottom" />
 </LinearLayout>

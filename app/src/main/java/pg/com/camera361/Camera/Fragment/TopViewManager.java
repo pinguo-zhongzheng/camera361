@@ -37,10 +37,14 @@ public class TopViewManager {
     private ImageButton mResolution;
     private ImageButton mCameraSwitching;
 
+    private ImageButton mBackToCamera;
+
     public TopViewManager(Fragment fragment) {
         mFragment = fragment;
         if (mFragment.getTag().contains(CameraConstants.Camera_Type)) {
             registerCameraEventListenler();
+        } else if (mFragment.getTag().contains(CameraConstants.Album_Type)) {
+            registerAlbumEventListenler();
         }
     }
 
@@ -144,5 +148,18 @@ public class TopViewManager {
         button.setLayoutParams(new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,
                 50));
         parent.addView(button);
+    }
+
+    private void registerAlbumEventListenler() {
+        mBackToCamera = (ImageButton) mFragment.getView().findViewById(R.id.back_to_camera);
+        mBackToCamera.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    mFragment.getActivity().finish();
+                }
+                return false;
+            }
+        });
     }
 }

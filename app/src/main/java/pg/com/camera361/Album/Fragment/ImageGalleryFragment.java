@@ -43,8 +43,6 @@ public class ImageGalleryFragment extends BaseFragment {
 
     String[] imageUrls = AlbumConstants.IMAGES;
 
-    DisplayImageOptions options;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

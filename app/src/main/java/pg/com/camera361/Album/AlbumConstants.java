@@ -38,6 +38,9 @@ public class AlbumConstants {
             "http://pic.viewpics.cn/2011/07/03/naichaMMzhangzetianzuixinzhaopian/18.jpg",
             "http://pic.viewpics.cn/2011/07/03/naichaMMzhangzetianzuixinzhaopian/18.jpg",
     };
+    public final static String IMAGE_TYPE = "image/*";
+    public final static int IMAGE_CODE = 0;   //这里的IMAGE_CODE是自己任意定义的
+    public final static String TAG = "Camera361 Album";
 
     private AlbumConstants() {
     }
