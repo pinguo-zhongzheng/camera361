@@ -1,4 +1,4 @@
-package pg.com.camera361;
+package pg.com.camera361.Camera.Fragment;
 
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +11,11 @@ import android.widget.SeekBar;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import pg.com.camera361.Camera.CameraConstants;
+import pg.com.camera361.Camera.CameraController;
+import pg.com.camera361.Camera.CameraPreview;
+import pg.com.camera361.R;
 
 /**
  * Created by zhongzheng on 14-10-8.
@@ -39,11 +44,13 @@ public class MiddleViewManager {
     public MiddleViewManager(Fragment fragment) {
         mFragment = fragment;
         mController = CameraController.getInstance();
-        initView();
-        registerEventListenler();
+        if (mFragment.getTag().contains(CameraConstants.Camera_Type)) {
+            initCameraView();
+            registerCameraEventListenler();
+        }
     }
 
-    private void initView() {
+    private void initCameraView() {
         mPreview = new CameraPreview(mFragment.getActivity().getBaseContext());
         FrameLayout preview = (FrameLayout) mFragment.getView().findViewById(R.id.camera_preview);
         preview.addView(mPreview, 0, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -64,7 +71,7 @@ public class MiddleViewManager {
         isInitSeekBar = true;
     }
 
-    private void registerEventListenler() {
+    private void registerCameraEventListenler() {
         mPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,26 +1,15 @@
-package pg.com.camera361;
+package pg.com.camera361.Camera;
 
-import android.app.Activity;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
+import pg.com.camera361.R;
 
-public class MainActivity extends FragmentActivity {
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
-    Camera.ShutterCallback myShutterCallback = new Camera.ShutterCallback() {
 
-        public void onShutter() {
-            // TODO Auto-generated method stub
-            Log.i("camera361", "myShutterCallback:onShutter...");
-
-        }
-    };
-    private CameraPreview mPreview;
+public class Camera extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

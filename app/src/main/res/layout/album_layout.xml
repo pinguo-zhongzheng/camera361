@@ -9,24 +9,24 @@
         android:id="@+id/top_control"
         class="pg.com.camera361.Camera.Fragment.TopControl"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:tag="camera_type_top"
-        tools:layout="@layout/top_control_layout" />
+        android:layout_height="56dp"
+        android:tag="album_type_top"
+        tools:layout="@layout/album_top_layout" />
 
     <fragment
         android:id="@+id/middle_preview"
-        class="pg.com.camera361.Camera.Fragment.MiddlePreview"
+        class="pg.com.camera361.Album.Fragment.ImageGridFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:tag="camera_type_middle"
-        tools:layout="@layout/middle_preview_layout" />
+        android:tag="album_type_middle"
+        tools:layout="@layout/fr_image_grid" />
 
     <fragment
         android:id="@+id/bottom_control"
         class="pg.com.camera361.Camera.Fragment.BottomControl"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:tag="camera_type_bottom"
-        tools:layout="@layout/bottom_control_layout" />
+        android:layout_height="56dp"
+        android:tag="album_type_bottom"
+        tools:layout="@layout/album_bottom_layout" />
 </LinearLayout>

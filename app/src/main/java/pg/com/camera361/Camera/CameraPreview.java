@@ -1,4 +1,4 @@
-package pg.com.camera361;
+package pg.com.camera361.Camera;
 
 import android.app.Activity;
 import android.content.Context;
@@ -98,11 +98,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         setMeasuredDimension(width, height);
         Log.d(CameraConstants.TAG, "cameraPreview onMeasure");
 
-        if (mCameraController.getSupportedPreviewSizes() != null) {
-            mCameraController.stopCamera();
-            mCameraController.setSupportCameraSize(width, height);
-            mCameraController.startCamera();
-        }
+//        if (mCameraController.getSupportedPreviewSizes() != null) {
+//            mCameraController.stopCamera();
+//            mCameraController.setSupportCameraSize(width, height);
+//            mCameraController.startCamera();
+//        }
     }
 
 //    @Override

@@ -1,4 +1,4 @@
-package pg.com.camera361;
+package pg.com.camera361.Camera;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -70,9 +70,10 @@ public class CameraController {
         }
     };
 
-    private CameraController(){}
+    private CameraController() {
+    }
 
-    public static CameraController getInstance(){
+    public static CameraController getInstance() {
         return mController;
     }
 
@@ -223,7 +224,7 @@ public class CameraController {
         mCamera.setParameters(parameters);
     }
 
-    private void initNextCamera(){
+    private void initNextCamera() {
         initDefaultCameraIndex();
         if (mCamera == null) {
             mCamera = getCameraInstance();
@@ -381,14 +382,14 @@ public class CameraController {
         }
     }
 
-    public void changeCamera(){
+    public void changeCamera() {
         if (numberOfCameras == 1) {
 //            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //            builder.setMessage(this.getString(R.string.camera_alert))
 //                    .setNeutralButton("Close", null);
 //            AlertDialog alert = builder.create();
 //            alert.show();
-            return ;
+            return;
         }
 
         // OK, we have multiple cameras.
@@ -410,9 +411,9 @@ public class CameraController {
         return;
     }
 
-    public void takePicture(){
+    public void takePicture() {
         mCamera.autoFocus(mAutoFocusCallback);
-        mCamera.takePicture(null,null,mPicture);
+        mCamera.takePicture(null, null, mPicture);
     }
 
     public void setZoom(int index) {

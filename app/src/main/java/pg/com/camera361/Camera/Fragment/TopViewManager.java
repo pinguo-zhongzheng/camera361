@@ -1,4 +1,4 @@
-package pg.com.camera361;
+package pg.com.camera361.Camera.Fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,6 +18,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import pg.com.camera361.Camera.CameraConstants;
+import pg.com.camera361.Camera.CameraController;
+import pg.com.camera361.R;
+
 /**
  * Created by zhongzheng on 14-10-8.
  */
@@ -35,10 +39,12 @@ public class TopViewManager {
 
     public TopViewManager(Fragment fragment) {
         mFragment = fragment;
-        registerEventListenler();
+        if (mFragment.getTag().contains(CameraConstants.Camera_Type)) {
+            registerCameraEventListenler();
+        }
     }
 
-    private void registerEventListenler() {
+    private void registerCameraEventListenler() {
         mResolution = (ImageButton) mFragment.getView().findViewById(R.id.resolution);
         mResolution.setOnTouchListener(new View.OnTouchListener() {
             @Override
